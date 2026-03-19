@@ -1,12 +1,16 @@
 # Imports
 import customtkinter
 from tkinter import messagebox
+from api import get_teams
+import subprocess
+import sys
 
 
 # Setting up Window-screen
 app = customtkinter.CTk()
 app.geometry("600x780")
 app.title("Fantasy-App-Sports")
+
 
 # Variables
 valid_sports = ["Soccer", "Ice Hockey", "Basketball", "Tennis", "Baseball", "Rugby"]
@@ -33,6 +37,8 @@ def enter_button():
         global chosen_sport
         chosen_sport = sport 
         messagebox.showinfo("Success", f"Chosen Sport is {sport}")
+        app.destroy()
+        subprocess.Popen([sys.executable, "team_builder.py"])
     else:
         messagebox.showerror("Error", f"'{sport}' is not a valid sport. Valid sports: {', '.join(valid_sports)}")
 
@@ -41,5 +47,3 @@ enter_btn.pack()
 
 # Running the app
 app.mainloop()
-
-#test

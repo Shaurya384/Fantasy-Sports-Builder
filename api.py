@@ -11,13 +11,44 @@ def get_sport():
 
 
 
-def get_players(sport_name):
-    url = f"https://www.thesportsdb.com/api/v1/json/123/searchplayers.php?s={sport_name}"
+def get_players(player_name):
+    url = f"https://www.thesportsdb.com/api/v1/json/123/searchplayers.php?p={player_name}"
     response = requests.get(url)
     data = response.json()
     players = data["player"]
+    all_players = []
     for player in players:
-        print(player["strPlayer"])
+        all_players.append({
+        "name": player["strPlayer"],
+        "photo": player["strThumb"],
+        "team": player["strTeam"],
+        "position": player["strPosition"]})
+    return all_players
+
+
+def get_teams(sport_name):
+    url = f"https://www.thesportsdb.com/api/v1/json/123/search_all_teams.php?l={sport_name}"
+    response = requests.get(url)
+    data = response.json()
+    teams = data["teams"]
+    all_teams = []
+    for team in teams:
+        all_teams.append(team["strTeam"])
+    return all_teams
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # def get_all_sports():

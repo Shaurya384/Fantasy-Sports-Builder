@@ -1,25 +1,39 @@
+#Import's
+import customtkinter
+from tkinter import messagebox
+from api import get_players
+from PIL import Image
 import requests
-
-name = input("Search up team: ")
-
-def get_team(team_name):
-    url = f"https://www.thesportsdb.com/api/v1/json/123/searchteams.php?t={team_name}"
-    respone = requests.get(url)
-    data = respone.json()
-    team = data["teams"][0]
-    print(team)
+from io import BytesIO
 
 
+#Setting up Window-screen
+app = customtkinter.CTk()
+app.geometry("600x780")
+app.title("Player Builder")
 
 
-# NHL = customtkinter.CTkLabel(app, text="NHL")
-# NHL.pack()
-# NHL = customtkinter.CTkLabel(app, text="NBA")
-# NHL.pack()
-# NHL = customtkinter.CTkLabel(app, text="Cricket")
-# NHL.pack()
-# NHL = customtkinter.CTkLabel(app, text="Soccer")
-# NHL.pack()
-# NHL = customtkinter.CTkLabel(app, text="American-Football")
-# NHL.pack()
-get_team(name)
+def enter_btn():
+    name = player_entry.get()
+    results = get_players(name)
+    for player in results:
+        response = requests.get(player["photo"])
+        img = Image.open(BytesIO(response.content))
+        img = img.resize((50, 50))
+        photo = customtkinter.CTkImage(img)
+    
+        # Show image + name together
+        label = customtkinter.CTkLabel(app, text=player["name"], image=photo, compound="left")
+        label.pack()
+
+
+
+player_entry = customtkinter.CTkEntry(app, placeholder_text="Enter Player: ")
+player_entry.pack()
+
+
+player_enter_btn = customtkinter.CTkButton(app, text="Search", command=enter_btn)
+player_enter_btn.pack()
+
+#Running the app
+app.mainloop()
